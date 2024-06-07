@@ -18,7 +18,7 @@ export const getInlineAnchorList: PlasmoGetInlineAnchorList = () =>
 
 const ProductCatalogQuick = () => {
   return (
-    <div className="bg-green-700 p-2 rounded-md w-full h-12 flex justify-center items-center">
+    <div className="bg-green-700 p-2 rounded-md w-full h-12 flex justify-center items-center z-10">
         {/* ! No idea why but when the text is not text-sm, not showing */}
       <p className="text-white text-sm text-center align-middle">Some environment information</p>
     </div>

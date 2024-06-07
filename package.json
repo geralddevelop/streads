@@ -11,6 +11,7 @@
     "update-types": "npx supabase gen types typescript --project-id \"mbkoeghfxurhtmogmcup\" > _libs/supabase/types.ts"
   },
   "dependencies": {
+    "@headlessui/react": "^2.0.4",
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.10.0",
     "@supabase/supabase-js": "^2.43.4",
@@ -33,9 +34,9 @@
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ],   
+    ],
     "permissions": [
       "activeTab"
-  ]
+    ]
   }
 }
