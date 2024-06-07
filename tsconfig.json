@@ -8,11 +8,22 @@
     "./**/*.ts",
     "./**/*.tsx"
   ],
+
   "compilerOptions": {
+    "verbatimModuleSyntax": false,
+
     "paths": {
-      "~*": [
-        "./*"
-      ]
+      "@components/*": ["./_components/*"],
+      "@assets/*": ["./_assets/*"],
+      "@hooks/*": ["./_hooks/*"],
+      "@libs/*": ["./_libs/*"],
+      "@providers/*": ["./_providers/*"],
+      "@styles/*": ["./_styles/*"],
+      "@types/*": ["./_types/*"], 
+      "@utils/*": ["./_utils/*"], 
+      "@services/*": ["./_services/*"], 
+      "@email/*": ["email/*"], 
+      "@/*": ["./*"],
     },
     "baseUrl": "."
   }

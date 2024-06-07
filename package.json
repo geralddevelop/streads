@@ -7,9 +7,13 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "update-types": "npx supabase gen types typescript --project-id \"mbkoeghfxurhtmogmcup\" > _libs/supabase/types.ts"
   },
   "dependencies": {
+    "@plasmohq/messaging": "^0.6.2",
+    "@plasmohq/storage": "^1.10.0",
+    "@supabase/supabase-js": "^2.43.4",
     "plasmo": "0.86.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -20,12 +24,18 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.1.0",
     "prettier": "3.2.4",
+    "tailwindcss": "^3.4.4",
     "typescript": "5.3.3"
   },
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
+    ],   
+    "permissions": [
+      "activeTab"
+  ]
   }
 }
