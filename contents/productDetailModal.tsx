@@ -3,7 +3,10 @@ import {
   ProductDetailModalMessage
 } from "@/background/ports/openProductDetailModal"
 import { AlternativeInfoCard } from "@components/alternatives/AlternativeInfoCard"
+import { Spinner } from "@components/spinner"
 import { XMarkIcon } from "@heroicons/react/20/solid"
+import { useGetAllAlternatives } from "@hooks/alternatives"
+import { withQueryClient } from "@libs/react-query/react-query"
 import { classNames } from "@utils/constants"
 import logo from "data-base64:~_assets/logo-colored.svg"
 import cssText from "data-text:~_styles/style.css"
@@ -29,14 +32,18 @@ const ProductDetailModal = () => {
   const [show, setShow] = React.useState(false)
   const openProductDetailModalPort = usePort(OPEN_PRODUCT_DETAIL_MODAL)
   const [tabIndex, setTabIndex] = React.useState(0)
+  const { data: alternatives, isLoading, isError } = useGetAllAlternatives()
+  const [alternativeKeywords, setAlternativeKeywords] = React.useState<
+    string[]
+  >([])
 
   React.useEffect(() => {
     openProductDetailModalPort.listen(
       async (msg: ProductDetailModalMessage) => {
         console.log("ProductDetailModal")
         console.log("keywords", msg.keywords)
-        console.log("producId", msg.productId)
-
+        console.log("productId", msg.productId)
+        setAlternativeKeywords(...[msg.keywords])
         setShow(true)
       }
     )
@@ -51,15 +58,23 @@ const ProductDetailModal = () => {
   }, [show])
 
   if (show) {
+    if (isLoading) {
+      return <Spinner />
+    }
+
+    if (isError || alternatives === undefined || alternatives.length === 0) {
+      return <></>
+    }
+
     return (
       <div
-        className="modal-overlay z-50"
+        className="modal-overlay z-50 h-screen"
         onClick={() => {
           console.log("clicked")
           setShow(false)
         }}>
         <div
-          className="modal-content w-3/6 z-50"
+          className="modal-content w-3/6 z-50 max-h-screen overflow-y-auto"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -134,6 +149,38 @@ const ProductDetailModal = () => {
                 <h4 className="text-2xl font-bold">
                   Consider Trying These Alternatives
                 </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {alternatives
+                    .filter((alternative) => {
+                      const keywords = alternative.keywords.map((keyword) =>
+                        keyword.toLowerCase()
+                      )
+                      return alternativeKeywords.some((keyword) =>
+                        keywords.includes(keyword)
+                      )
+                    })
+                    .map((alternative) => (
+                      <div
+                        className="cursor-pointer p-4 border border-gray-200 rounded-md hover:border-green-800 hover:shadow-md transition-all duration-200 ease-in-out"
+                        key={alternative.id}
+                        onClick={() => {
+                          window.open(alternative.src, "_blank")
+                        }}>
+                        <img
+                          src={alternative.image_src}
+                          className="rounded-md"
+                        />
+                        <p className="font-semibold text-xl mt-2">
+                          {alternative.name}
+                        </p>
+                        {alternative.brand && (
+                          <p className="font-semibold text-lg text-gray-600 mt-2">
+                            By {alternative.brand}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                </div>
               </div>
             )}
           </div>
@@ -164,4 +211,4 @@ const DetailItem = ({
   )
 }
 
-export default ProductDetailModal
+export default withQueryClient(ProductDetailModal)

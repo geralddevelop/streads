@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       alternatives: {
         Row: {
+          brand: string | null
           created_at: string
           id: number
           image_src: string | null
@@ -19,6 +20,7 @@ export type Database = {
           src: string | null
         }
         Insert: {
+          brand?: string | null
           created_at?: string
           id?: number
           image_src?: string | null
@@ -27,6 +29,7 @@ export type Database = {
           src?: string | null
         }
         Update: {
+          brand?: string | null
           created_at?: string
           id?: number
           image_src?: string | null
