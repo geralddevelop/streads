@@ -1,5 +1,8 @@
 // This file show quick environmental details at the bottom of the product catalog page in shein.com.
 
+import { Spinner } from "@components/spinner"
+import { useGetAllFacts } from "@hooks/facts"
+import { withQueryClient } from "@libs/react-query/react-query"
 import { classNames } from "@utils/constants"
 import cssText from "data-text:~_styles/style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchorList } from "plasmo"
@@ -17,12 +20,38 @@ export const getStyle = () => {
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = () =>
   document.querySelectorAll("div.product-card__bottom-wrapper")
 
-const ProductCatalogQuick = () => {
+const ProductCatalogQuick = ({ anchor }) => {
+  const productKeywords = []
+  for (let i = 0; i < anchor.element.children.length; i++) {
+    productKeywords.push(
+      ...anchor.element.children[i].innerText.toLowerCase().split(" ")
+    )
+  }
+
+  const { data: facts, isLoading, isError } = useGetAllFacts()
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
+  if (isError || facts === undefined || facts.length === 0) {
+    return <></>
+  }
+
   return (
     <div className="grid grid-cols-3 gap-2">
-      <QuickItem title="Chemical Free" status="good" />
-      <QuickItem title="No Eco Packaging" status="bad" />
-      <QuickItem title="13.66KG C02" status="bad" />
+      {facts
+        .filter((fact) => {
+          const factKeywords = fact.keywords.map((keyword) =>
+            keyword.toLowerCase()
+          )
+          return productKeywords.some((keyword) =>
+            factKeywords.includes(keyword)
+          )
+        })
+        .map((fact) => (
+          <QuickItem title={fact.title} status="good" />
+        ))}
     </div>
   )
 }
@@ -48,4 +77,4 @@ const QuickItem = ({
   )
 }
 
-export default ProductCatalogQuick
+export default withQueryClient(ProductCatalogQuick)
