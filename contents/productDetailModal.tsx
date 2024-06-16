@@ -1,7 +1,15 @@
+import {
+  OPEN_PRODUCT_DETAIL_MODAL,
+  ProductDetailModalMessage
+} from "@/background/ports/openProductDetailModal"
+import { AlternativeInfoCard } from "@components/alternatives/AlternativeInfoCard"
+import { XMarkIcon } from "@heroicons/react/20/solid"
 import { classNames } from "@utils/constants"
+import logo from "data-base64:~_assets/logo-colored.svg"
 import cssText from "data-text:~_styles/style.css"
 import { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React from "react"
+
 import { usePort } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
@@ -19,16 +27,19 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 
 const ProductDetailModal = () => {
   const [show, setShow] = React.useState(false)
-  const openProductDetailModalPort = usePort("openProductDetailModal")
+  const openProductDetailModalPort = usePort(OPEN_PRODUCT_DETAIL_MODAL)
   const [tabIndex, setTabIndex] = React.useState(0)
 
   React.useEffect(() => {
-    openProductDetailModalPort.listen(async (msg) => {
-      console.log("ProductDetailModal")
-      console.log("msg", msg)
+    openProductDetailModalPort.listen(
+      async (msg: ProductDetailModalMessage) => {
+        console.log("ProductDetailModal")
+        console.log("keywords", msg.keywords)
+        console.log("producId", msg.productId)
 
-      setShow(true)
-    })
+        setShow(true)
+      }
+    )
   }, [])
 
   React.useEffect(() => {
@@ -53,17 +64,28 @@ const ProductDetailModal = () => {
             e.preventDefault()
             e.stopPropagation()
           }}>
-          <div className="flex justify-between">
-            <button className="text-md" onClick={() => setShow(false)}>
-              We are Streads
+          <div className="flex justify-between items-center">
+            <button
+              className="text-md"
+              onClick={() =>
+                window.open(
+                  "https://streads-landing-sljp.vercel.app/",
+                  "_blank"
+                )
+              }>
+              <img src={logo} alt="Streads Logo" />
             </button>
-            <button className="text-md" onClick={() => setShow(false)}>
-              Close
+
+            <button
+              type="button"
+              className="rounded-full p-2 hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+              onClick={() => setShow(false)}>
+              <XMarkIcon className="h-8 w-8" aria-hidden="true" />
             </button>
           </div>
 
           <div className="py-4">
-            <h3 className="text-5xl">We rate it as bad!</h3>
+            <h3 className="text-5xl">We rate it as badd!</h3>
           </div>
 
           <div className="hidden sm:block">
@@ -106,7 +128,13 @@ const ProductDetailModal = () => {
                 </div>
               </div>
             ) : (
-              <h4 className="text-2xl">You Can Look for Alternatives</h4>
+              <div className="flex flex-col gap-4 text-left">
+                <AlternativeInfoCard />
+
+                <h4 className="text-2xl font-bold">
+                  Consider Trying These Alternatives
+                </h4>
+              </div>
             )}
           </div>
         </div>

@@ -18,7 +18,9 @@ export const getStyle = () => {
 }
 
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = () =>
-  document.querySelectorAll("div.product-card__bottom-wrapper")
+  document.querySelectorAll(
+    "section.product-card>div.product-card__bottom-wrapper"
+  )
 
 const ProductCatalogQuick = ({ anchor }) => {
   const productKeywords = []
@@ -50,7 +52,7 @@ const ProductCatalogQuick = ({ anchor }) => {
           )
         })
         .map((fact) => (
-          <QuickItem title={fact.title} status="good" />
+          <QuickItem title={fact.title} status="good" key={fact.id} />
         ))}
     </div>
   )
