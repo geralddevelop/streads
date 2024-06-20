@@ -15,8 +15,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        "brand-green": "#008080",
-        "brand-light-green": "#CFF1DD",
         "brand-red": "#D34C3E",
         "brand-light-red": "#FFCCC7",
         "brand-orange": "#E78A00",
@@ -24,7 +22,10 @@ module.exports = {
         "brand-yellow": "#D0B300",
         "brand-light-yellow": "#FDF6CB",
         "brand-grass-green": "#839E63",
-        "brand-light-grass-green": "#EEFCDE"
+        "brand-light-grass-green": "#EEFCDE",
+        "brand-green": "#008080",
+        "brand-light-green": "#CFF1DD",
+        "brand-lighter-green": "#F1F6FA"
       }
     }
   }

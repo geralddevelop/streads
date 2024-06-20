@@ -3,15 +3,13 @@ import {
   ProductDetailModalMessage
 } from "@/background/ports/openProductDetailModal"
 import { ClothingItem } from "@components/detailModal/clothingItem"
-import { DetailItem } from "@components/detailModal/detailItem"
+import { ImpactInfoCard } from "@components/detailModal/impactInfoCard"
 import { HighlightedNumberText } from "@components/highlightItemText"
 import { Spinner } from "@components/spinner"
-import { SustainableChart } from "@components/sustainableRating"
 import { Tabs } from "@components/tabs"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import { useGetAllAlternatives } from "@hooks/alternatives"
 import { withQueryClient } from "@libs/react-query/react-query"
-import { classNames } from "@utils/constants"
 import modalBanner from "data-base64:~_assets/banners/modal-banner.png"
 import logo from "data-base64:~_assets/logo-colored.svg"
 import cssText from "data-text:~_styles/style.css"
@@ -19,6 +17,7 @@ import { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React from "react"
 
 import { usePort } from "@plasmohq/messaging/hook"
+import { ImpactItem } from "@components/detailModal/impactItem"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://sg.shein.com/*"]
@@ -72,7 +71,7 @@ const ProductDetailModal = () => {
           setShow(false)
         }}>
         <div
-          className="modal-content z-50 max-h-screen overflow-y-auto"
+          className="modal-content z-50 max-h-screen overflow-y-auto shadow-sm"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -91,7 +90,7 @@ const ProductDetailModal = () => {
 
             <button
               type="button"
-              className="rounded-full p-2 hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+              className="rounded-full p-2 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
               onClick={() => setShow(false)}>
               <XMarkIcon className="h-8 w-8" aria-hidden="true" />
             </button>
@@ -181,22 +180,21 @@ const ProductDetailModal = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-4 text-left">
-                  <div>
-                    <h4 className="text-2xl font-semibold">
-                      Eco-Impact of Your Choices
-                    </h4>
-                    <DetailItem title="Jeans require 70L of freshwater per wear" />
-                    <DetailItem
-                      title="Dyeing them tends to add 0.004 kg CO2 to the environment per
-                    wear"
-                    />
+                  <div className="px-4">
+                    <ImpactInfoCard grading={1} />
                   </div>
-
-                  <div>
-                    <h4 className="text-2xl font-semibold">Materials</h4>
-                    <DetailItem title="Releases microplastics into waterways during washing" />
-                    <DetailItem title="Takes hundreds of years to decompose" />
-                  </div>
+                  <ImpactItem
+                    title="Eco Impact"
+                    description="Choosing sustainable options helps protect natural resources and reduce pollution"
+                  />
+                  <ImpactItem
+                    title="Health Impact"
+                    description="Eco-friendly products support better health by cutting down on harmful pollution."
+                  />
+                  <ImpactItem
+                    title="Social Impact"
+                    description="Supporting ethical brands ensures fair labor practices and better worker welfare."
+                  />
                 </div>
               )}
             </div>

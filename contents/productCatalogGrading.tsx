@@ -33,11 +33,13 @@ const ProductCatalogGrading = ({ anchor, i }) => {
   const imageSrc =
     anchor.element.offsetParent.children[0].tagName === "SPAN"
       ? anchor.element.offsetParent.children[0].children[0].getAttribute("src")
-      : ""
+      : anchor.element.offsetParent.children[0].tagName === "IMG"
+        ? anchor.element.offsetParent.children[0].getAttribute("src")
+        : ""
 
   async function handleGradingClick() {
     console.log("sending command")
-
+    console.log(imageSrc)
     // Should open grading modal in productDetailModal
     openProductDetailModalPort.send({
       productId: "world from grading",
