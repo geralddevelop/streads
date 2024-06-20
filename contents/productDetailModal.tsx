@@ -4,6 +4,7 @@ import {
 } from "@/background/ports/openProductDetailModal"
 import { ClothingItem } from "@components/detailModal/clothingItem"
 import { ImpactInfoCard } from "@components/detailModal/impactInfoCard"
+import { ImpactItem } from "@components/detailModal/impactItem"
 import { HighlightedNumberText } from "@components/highlightItemText"
 import { Spinner } from "@components/spinner"
 import { Tabs } from "@components/tabs"
@@ -17,7 +18,6 @@ import { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React from "react"
 
 import { usePort } from "@plasmohq/messaging/hook"
-import { ImpactItem } from "@components/detailModal/impactItem"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://sg.shein.com/*"]
@@ -40,16 +40,20 @@ const ProductDetailModal = () => {
   const [alternativeKeywords, setAlternativeKeywords] = React.useState<
     string[]
   >([])
-  const [product, setProduct] = React.useState<ProductDetailModalMessage>()
+  const [product, setProduct] =
+    React.useState<ProductDetailModalMessage>(undefined)
 
   React.useEffect(() => {
     openProductDetailModalPort.listen(
-      async (msg: ProductDetailModalMessage) => {
-        console.log("ProductDetailModal")
-        console.log("keywords", msg.keywords)
-        console.log("productId", msg.productId)
-        setAlternativeKeywords(...[msg.keywords])
+      async (msg: ProductDetailModalMessage | undefined) => {
         setShow(true)
+        if (msg === null) {
+          setAlternativeKeywords([])
+          setProduct(undefined)
+          return
+        }
+
+        setAlternativeKeywords(...[msg.keywords])
         setProduct(msg)
       }
     )
@@ -71,7 +75,7 @@ const ProductDetailModal = () => {
           setShow(false)
         }}>
         <div
-          className="modal-content z-50 max-h-screen overflow-y-auto shadow-sm"
+          className="modal-content z-50 max-h-screen overflow-y-auto shadow-xl rounded-tl-xl rounded-tr-xl"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -104,26 +108,30 @@ const ProductDetailModal = () => {
           />
 
           <div className="p-8 pt-4">
-            <p
-              onClick={() =>
-                window.open(
-                  "https://streads-landing-sljp.vercel.app/",
-                  "_blank"
-                )
-              }
-              className="underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
-              Find out more about the grading
-            </p>
-
-            <div className="p-6 pt-4 pb-0">
-              <ClothingItem
-                name={product.productName}
-                brand={product.productBrand}
-                imageSrc={product.productImageSrc}
-                sustainableScoring={product.productGrading}
-                labels={["No sustainable fabric", "Low worker Welfare"]}
-              />
-            </div>
+            {product && (
+              <>
+                <p
+                  onClick={() =>
+                    window.open(
+                      "https://streads-landing-sljp.vercel.app/",
+                      "_blank"
+                    )
+                  }
+                  className="underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
+                  Find out more about the grading
+                </p>
+                <div className="p-6 pt-4 pb-0">
+                  <ClothingItem
+                    clickable={false}
+                    name={product.productName}
+                    brand={product.productBrand}
+                    imageSrc={product.productImageSrc}
+                    sustainableScoring={product.productGrading}
+                    labels={["No sustainable fabric", "Low worker Welfare"]}
+                  />
+                </div>
+              </>
+            )}
 
             <div className="hidden sm:block">
               <div className="flex justify-center">
@@ -144,6 +152,8 @@ const ProductDetailModal = () => {
                           const keywords = alternative.keywords.map((keyword) =>
                             keyword.toLowerCase()
                           )
+
+                          if (alternativeKeywords.length === 0) return true
                           return alternativeKeywords.some((keyword) =>
                             keywords.includes(keyword)
                           )
@@ -160,6 +170,7 @@ const ProductDetailModal = () => {
                         const keywords = alternative.keywords.map((keyword) =>
                           keyword.toLowerCase()
                         )
+                        if (alternativeKeywords.length === 0) return true
                         return alternativeKeywords.some((keyword) =>
                           keywords.includes(keyword)
                         )

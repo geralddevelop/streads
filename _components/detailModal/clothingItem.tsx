@@ -1,4 +1,5 @@
 import { SustainableChart } from "@components/sustainableRating"
+import { classNames } from "@utils/constants"
 
 export const ClothingItem = ({
   name,
@@ -9,7 +10,8 @@ export const ClothingItem = ({
   link,
   sustainableScoring,
   haveDividerBelow,
-  showScoringOnImage
+  showScoringOnImage,
+  clickable = true
 }: {
   name: string
   imageSrc: string
@@ -20,10 +22,14 @@ export const ClothingItem = ({
   sustainableScoring?: number
   haveDividerBelow?: boolean
   showScoringOnImage?: boolean
+  clickable?: boolean
 }) => {
   return (
     <div
-      className="cursor-pointer rounded-md text-left"
+      className={classNames(
+        clickable ? "cursor-pointer hover:brightness-95" : "",
+        "rounded-md text-left"
+      )}
       onClick={() => {
         if (link === undefined) return
         window.open(link, "_blank")

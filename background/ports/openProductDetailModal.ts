@@ -11,10 +11,7 @@ export type ProductDetailModalMessage = {
 }
 
 const handler: PlasmoMessaging.PortHandler = async (req, res) => {
-  res.send(req.body as ProductDetailModalMessage)
-  // chrome.sidePanel
-  //   .setPanelBehavior({ openPanelOnActionClick: true })
-  //   .catch((error) => console.error(error))
+  res.send(req.body)
 }
 
 export default handler

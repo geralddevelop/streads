@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#plasmo-shadow-container {
+    right: 0;
+    top: 15%;
+    position: fixed !important;
+}
