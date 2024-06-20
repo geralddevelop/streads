@@ -1,8 +1,8 @@
 // This file show the grading image of the product catalog page in shein.com.
-import gradingBad from "data-base64:~_assets/grading/bad.png"
+import { ProductDetailModalMessage } from "@/background/ports/openProductDetailModal"
+import grade1 from "data-base64:~_assets/grading/1.png"
 import cssText from "data-text:~_styles/style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchorList } from "plasmo"
-import { useEffect, useRef } from "react"
 
 import { usePort } from "@plasmohq/messaging/hook"
 
@@ -30,18 +30,28 @@ const ProductCatalogGrading = ({ anchor, i }) => {
     productKeywords.push(...children[i].innerText.toLowerCase().split(" "))
   }
 
+  const imageSrc =
+    anchor.element.offsetParent.children[0].tagName === "SPAN"
+      ? anchor.element.offsetParent.children[0].children[0].getAttribute("src")
+      : ""
+
   async function handleGradingClick() {
     console.log("sending command")
+
     // Should open grading modal in productDetailModal
     openProductDetailModalPort.send({
       productId: "world from grading",
-      keywords: productKeywords
-    })
+      keywords: productKeywords,
+      productName: children[0].innerText ?? "Item",
+      productImageSrc: imageSrc,
+      productGrading: 1,
+      productBrand: "SHEIN"
+    } as ProductDetailModalMessage)
   }
 
   return (
     <button
-      className="bg-transparent h-16 w-16 rounded-full m-4 absolute right-0 top-0 z-50"
+      className="bg-transparent h-16 w-16 rounded-full m-4 absolute right-0 top-0 z-50 "
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -49,7 +59,11 @@ const ProductCatalogGrading = ({ anchor, i }) => {
 
         handleGradingClick()
       }}>
-      <img src={gradingBad} alt="grading" />
+      <img
+        className="hover:filter hover:brightness-90 transition duration-100"
+        src={grade1}
+        alt="grading"
+      />
     </button>
   )
 }

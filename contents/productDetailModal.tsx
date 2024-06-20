@@ -2,12 +2,17 @@ import {
   OPEN_PRODUCT_DETAIL_MODAL,
   ProductDetailModalMessage
 } from "@/background/ports/openProductDetailModal"
-import { AlternativeInfoCard } from "@components/alternatives/AlternativeInfoCard"
+import { ClothingItem } from "@components/detailModal/clothingItem"
+import { DetailItem } from "@components/detailModal/detailItem"
+import { HighlightedNumberText } from "@components/highlightItemText"
 import { Spinner } from "@components/spinner"
+import { SustainableChart } from "@components/sustainableRating"
+import { Tabs } from "@components/tabs"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import { useGetAllAlternatives } from "@hooks/alternatives"
 import { withQueryClient } from "@libs/react-query/react-query"
 import { classNames } from "@utils/constants"
+import modalBanner from "data-base64:~_assets/banners/modal-banner.png"
 import logo from "data-base64:~_assets/logo-colored.svg"
 import cssText from "data-text:~_styles/style.css"
 import { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
@@ -36,6 +41,7 @@ const ProductDetailModal = () => {
   const [alternativeKeywords, setAlternativeKeywords] = React.useState<
     string[]
   >([])
+  const [product, setProduct] = React.useState<ProductDetailModalMessage>()
 
   React.useEffect(() => {
     openProductDetailModalPort.listen(
@@ -45,17 +51,10 @@ const ProductDetailModal = () => {
         console.log("productId", msg.productId)
         setAlternativeKeywords(...[msg.keywords])
         setShow(true)
+        setProduct(msg)
       }
     )
   }, [])
-
-  React.useEffect(() => {
-    if (show) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "auto"
-    }
-  }, [show])
 
   if (show) {
     if (isLoading) {
@@ -70,16 +69,15 @@ const ProductDetailModal = () => {
       <div
         className="modal-overlay z-50 h-screen"
         onClick={() => {
-          console.log("clicked")
           setShow(false)
         }}>
         <div
-          className="modal-content w-3/6 z-50 max-h-screen overflow-y-auto"
+          className="modal-content z-50 max-h-screen overflow-y-auto"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
           }}>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center p-8 pb-0">
             <button
               className="text-md"
               onClick={() =>
@@ -99,90 +97,109 @@ const ProductDetailModal = () => {
             </button>
           </div>
 
-          <div className="py-4">
-            <h3 className="text-5xl">We rate it as badd!</h3>
-          </div>
+          <img
+            src={modalBanner}
+            alt="Modal Banner"
+            width={"500px"}
+            className="pt-4"
+          />
 
-          <div className="hidden sm:block">
-            <div className="flex justify-center">
-              <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                {["Eco-Impacts", "Alternative"].map((tab, i) => (
-                  <button
-                    key={tab}
-                    onClick={() => setTabIndex(i)}
-                    className={classNames(
-                      tabIndex === i
-                        ? "border-green-700 text-green-800"
-                        : "border-transparent text-black hover:border-green-600 hover:text-green-800",
-                      "whitespace-nowrap border-b-2 px-1 py-4 font-medium text-xl"
-                    )}>
-                    {tab}
-                  </button>
-                ))}
-              </nav>
+          <div className="p-8 pt-4">
+            <p
+              onClick={() =>
+                window.open(
+                  "https://streads-landing-sljp.vercel.app/",
+                  "_blank"
+                )
+              }
+              className="underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
+              Find out more about the grading
+            </p>
+
+            <div className="p-6 pt-4 pb-0">
+              <ClothingItem
+                name={product.productName}
+                brand={product.productBrand}
+                imageSrc={product.productImageSrc}
+                sustainableScoring={product.productGrading}
+                labels={["No sustainable fabric", "Low worker Welfare"]}
+              />
             </div>
-          </div>
-          <div className="p-8">
-            {tabIndex === 0 ? (
-              <div className="flex flex-col gap-4 text-left">
-                <div>
-                  <h4 className="text-2xl font-semibold">
-                    Eco-Impact of Your Choices
-                  </h4>
-                  <DetailItem title="Jeans require 70L of freshwater per wear" />
-                  <DetailItem
-                    title="Dyeing them tends to add 0.004 kg CO2 to the environment per
-                    wear"
-                  />
-                </div>
 
-                <div>
-                  <h4 className="text-2xl font-semibold">Materials</h4>
-                  <DetailItem title="Releases microplastics into waterways during washing" />
-                  <DetailItem title="Takes hundreds of years to decompose" />
-                </div>
+            <div className="hidden sm:block">
+              <div className="flex justify-center">
+                <Tabs
+                  tabs={["Alternatives", "Impact"]}
+                  indexSelected={tabIndex}
+                  onTabClick={(index) => setTabIndex(index)}
+                />
               </div>
-            ) : (
-              <div className="flex flex-col gap-4 text-left">
-                <AlternativeInfoCard />
+            </div>
+            <div className="pt-8">
+              {tabIndex === 0 ? (
+                <div className="flex flex-col gap-4 text-left">
+                  <div className="flex items-center gap-2">
+                    <HighlightedNumberText
+                      num={
+                        alternatives.filter((alternative) => {
+                          const keywords = alternative.keywords.map((keyword) =>
+                            keyword.toLowerCase()
+                          )
+                          return alternativeKeywords.some((keyword) =>
+                            keywords.includes(keyword)
+                          )
+                        }).length
+                      }
+                    />
 
-                <h4 className="text-2xl font-bold">
-                  Consider Trying These Alternatives
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {alternatives
-                    .filter((alternative) => {
-                      const keywords = alternative.keywords.map((keyword) =>
-                        keyword.toLowerCase()
-                      )
-                      return alternativeKeywords.some((keyword) =>
-                        keywords.includes(keyword)
-                      )
-                    })
-                    .map((alternative) => (
-                      <div
-                        className="cursor-pointer p-4 border border-gray-200 rounded-md hover:border-green-800 hover:shadow-md transition-all duration-200 ease-in-out"
-                        key={alternative.id}
-                        onClick={() => {
-                          window.open(alternative.src, "_blank")
-                        }}>
-                        <img
-                          src={alternative.image_src}
-                          className="rounded-md"
+                    <p className="text-sm">sustainable alternatives found</p>
+                  </div>
+
+                  <div className="flex flex-col">
+                    {alternatives
+                      .filter((alternative) => {
+                        const keywords = alternative.keywords.map((keyword) =>
+                          keyword.toLowerCase()
+                        )
+                        return alternativeKeywords.some((keyword) =>
+                          keywords.includes(keyword)
+                        )
+                      })
+                      .map((alternative, i) => (
+                        <ClothingItem
+                          key={alternative.name}
+                          name={alternative.name}
+                          imageSrc={alternative.image_src}
+                          brand={alternative.brand}
+                          labels={["Sustainable fabric", "Worker Welfare"]}
+                          link={alternative.src}
+                          price={alternative.price}
+                          haveDividerBelow={i !== alternatives.length - 1}
                         />
-                        <p className="font-semibold text-xl mt-2">
-                          {alternative.name}
-                        </p>
-                        {alternative.brand && (
-                          <p className="font-semibold text-lg text-gray-600 mt-2">
-                            By {alternative.brand}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                      ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="flex flex-col gap-4 text-left">
+                  <div>
+                    <h4 className="text-2xl font-semibold">
+                      Eco-Impact of Your Choices
+                    </h4>
+                    <DetailItem title="Jeans require 70L of freshwater per wear" />
+                    <DetailItem
+                      title="Dyeing them tends to add 0.004 kg CO2 to the environment per
+                    wear"
+                    />
+                  </div>
+
+                  <div>
+                    <h4 className="text-2xl font-semibold">Materials</h4>
+                    <DetailItem title="Releases microplastics into waterways during washing" />
+                    <DetailItem title="Takes hundreds of years to decompose" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -191,24 +208,4 @@ const ProductDetailModal = () => {
     return <></>
   }
 }
-
-const DetailItem = ({
-  title,
-  content
-}: {
-  title: string
-  content?: string
-}) => {
-  return (
-    <div className="flex items-center justify-between gap-2 py-2">
-      <div className="flex items-center gap-2">
-        <div className="h-4 w-4 bg-green-800 rounded-full"></div>
-        <p className="text-lg">{title} </p>
-      </div>
-
-      <div className="h-4 w-4 bg-black rounded-full"></div>
-    </div>
-  )
-}
-
 export default withQueryClient(ProductDetailModal)
