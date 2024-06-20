@@ -47,6 +47,8 @@ const ProductDetailModal = () => {
     openProductDetailModalPort.listen(
       async (msg: ProductDetailModalMessage | undefined) => {
         setShow(true)
+        setTabIndex(0)
+        
         if (msg === null) {
           setAlternativeKeywords([])
           setProduct(undefined)
