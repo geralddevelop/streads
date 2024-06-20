@@ -48,7 +48,7 @@ const ProductDetailModal = () => {
       async (msg: ProductDetailModalMessage | undefined) => {
         setShow(true)
         setTabIndex(0)
-        
+
         if (msg === null) {
           setAlternativeKeywords([])
           setProduct(undefined)
@@ -194,7 +194,7 @@ const ProductDetailModal = () => {
               ) : (
                 <div className="flex flex-col gap-4 text-left">
                   <div className="px-4">
-                    <ImpactInfoCard grading={1} />
+                    <ImpactInfoCard grading={product.productGrading} />
                   </div>
                   <ImpactItem
                     title="Eco Impact"

@@ -41,7 +41,9 @@ const ProductCatalogQuick = ({ anchor }) => {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="flex w-full gap-2 bg-brand-green p-2 items-center">
+      <p className="text-white font-semibold text-[10px]">We're streads</p>
+
       {facts
         .filter((fact) => {
           const factKeywords = fact.keywords.map((keyword) =>
@@ -69,12 +71,12 @@ const QuickItem = ({
     <div
       className={classNames(
         status === "good"
-          ? "border-green-800 text-green-800"
+          ? "border-white text-white"
           : "border-red-800 text-red-800",
-        "p-2 rounded-3xl w-full h-12 flex justify-center items-center z-10 border-green-800 border-2"
+        "p-2 px-4 rounded-3xl flex justify-center items-center z-10 border-2 font-semibold"
       )}>
       {/* ! No idea why but when the text is not text-sm, not showing */}
-      <p className="text-sm text-center align-middle">{title}</p>
+      <p className="text-[10px] text-center align-middle">{title}</p>
     </div>
   )
 }
