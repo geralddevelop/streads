@@ -41,3 +41,16 @@
     position: absolute;
     right: 0;
 }
+
+
+.modal-content-small {
+    width: 330px;
+    height: 40%;
+    background-color: white;
+    /* padding: 20px; */
+    text-align: center;
+    overflow-y: scroll;
+    float: right;
+    position: absolute;
+    right: 0;
+}

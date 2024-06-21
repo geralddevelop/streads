@@ -37,13 +37,23 @@ const ProductCatalogQuick = ({ anchor }) => {
     return <Spinner />
   }
 
-  if (isError || facts === undefined || facts.length === 0) {
+  if (
+    isError ||
+    facts === undefined ||
+    facts.length === 0 ||
+    facts.filter((fact) => {
+      const factKeywords = fact.keywords.map((keyword) => keyword.toLowerCase())
+      return productKeywords.some((keyword) => factKeywords.includes(keyword))
+    }).length === 0
+  ) {
     return <></>
   }
 
   return (
-    <div className="flex w-full gap-2 bg-brand-green p-2 items-center">
-      <p className="text-white font-semibold text-[10px]">We're streads</p>
+    <div className="flex w-full gap-2 p-2 items-center">
+      <p className="text-brand-green font-semibold text-[10px]">
+      Streads says:
+      </p>
 
       {facts
         .filter((fact) => {
@@ -55,7 +65,7 @@ const ProductCatalogQuick = ({ anchor }) => {
           )
         })
         .map((fact) => (
-          <QuickItem title={fact.title} status="good" key={fact.id} />
+          <QuickItem title={fact.title} status="bad" key={fact.id} />
         ))}
     </div>
   )
@@ -73,8 +83,8 @@ const QuickItem = ({
       className={classNames(
         status === "good"
           ? "border-white text-white"
-          : "border-red-800 text-red-800",
-        "p-2 px-4 rounded-3xl flex justify-center items-center z-10 border-2 font-semibold"
+          : "border-brand-red text-brand-red",
+        "p-1 px-2 rounded-3xl flex justify-center items-center z-10 border-2 font-semibold"
       )}>
       {/* ! No idea why but when the text is not text-sm, not showing */}
       <p className="text-[10px] text-center align-middle">{title}</p>

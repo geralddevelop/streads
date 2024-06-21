@@ -47,7 +47,7 @@ export const HeaderCountCard = ({
           }
           width={106}
           height={106}
-          className="opacity-20 -ml-4"
+          className="-ml-4 opacity-45"
           alt="rating"
         />
         {children}
@@ -82,7 +82,7 @@ export const HeaderCountCard = ({
         </p>
         <div className="flex flex-col items-end text-right">
           <p className="font-semibold text-[32px]">{itemCount} pieces</p>
-          <p className="font-medium text-[12px]">of items</p>
+          <p className="font-medium text-[12px]">of item(s) in cart</p>
         </div>
       </div>
     </div>

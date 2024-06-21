@@ -1,5 +1,6 @@
 // This file show the button to quick access modal on the right.
 import { OPEN_CART_MODAL } from "@/background/ports/openCartModal"
+import { classNames } from "@utils/constants"
 import dragIcon from "data-base64:~_assets/icons/drag.svg"
 import cssText from "data-text:~_styles/quickModalButton.css"
 import type { PlasmoCSConfig } from "plasmo"
@@ -31,7 +32,7 @@ const QuickModalButton = () => {
       if (anchorElement) {
         setCartNum(Number(anchorElement.textContent))
       }
-    }, 2000)
+    }, 1000)
   }, [])
 
   return (
@@ -76,7 +77,18 @@ const QuickModalButton = () => {
         </div>
       </div>
       <button
-        className="w-[170px] bg-brand-red rounded-tl-md rounded-bl-md flex justify-between gap-4 items-center px-4 py-4 z-50 hover:brightness-90 cursor-pointer"
+        className={classNames(
+          cartNum > 5
+            ? "bg-brand-red"
+            : cartNum > 4
+              ? "bg-brand-orange"
+              : cartNum > 3
+                ? "bg-brand-yellow"
+                : cartNum > 2
+                  ? "bg-brand-grass-green"
+                  : "bg-brand-green",
+          "w-[170px] rounded-tl-md rounded-bl-md flex justify-between gap-4 items-center px-4 py-4 z-50 hover:brightness-90 cursor-pointer"
+        )}
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
@@ -86,7 +98,9 @@ const QuickModalButton = () => {
         }}>
         <div className="flex flex-col text-left">
           <p className="font-bold text-sm text-white">we're streads</p>
-          <p className="text-xs text-white">{cartNum} in Cart</p>
+          <p className="text-xs text-white">
+            <b>{cartNum} Item(s)</b> in Cart
+          </p>
         </div>
         <img src={dragIcon} alt="drag icon" />
       </button>

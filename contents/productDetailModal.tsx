@@ -2,6 +2,7 @@ import {
   OPEN_PRODUCT_DETAIL_MODAL,
   ProductDetailModalMessage
 } from "@/background/ports/openProductDetailModal"
+import { OPEN_PROMO_MODAL } from "@/background/ports/openPromoModal"
 import { ClothingItem } from "@components/detailModal/clothingItem"
 import { ImpactInfoCard } from "@components/detailModal/impactInfoCard"
 import { ImpactItem } from "@components/detailModal/impactItem"
@@ -44,6 +45,7 @@ const ProductDetailModal = () => {
   >([])
   const [product, setProduct] =
     React.useState<ProductDetailModalMessage>(undefined)
+  const openPromoModalPort = usePort(OPEN_PROMO_MODAL)
 
   React.useEffect(() => {
     openProductDetailModalPort.listen(
@@ -186,6 +188,12 @@ const ProductDetailModal = () => {
                         link={alternative.src}
                         price={alternative.price}
                         haveDividerBelow={i !== alternatives.length - 1}
+                        onClick={() => {
+                          setShow(false)
+                          openPromoModalPort.send({
+                            brand: alternative.brand
+                          })
+                        }}
                       />
                     ))}
                 </div>

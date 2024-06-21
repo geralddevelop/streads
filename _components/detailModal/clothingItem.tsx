@@ -11,7 +11,8 @@ export const ClothingItem = ({
   sustainableScoring,
   haveDividerBelow,
   showScoringOnImage,
-  clickable = true
+  clickable = true,
+  onClick
 }: {
   name: string
   imageSrc: string
@@ -23,6 +24,7 @@ export const ClothingItem = ({
   haveDividerBelow?: boolean
   showScoringOnImage?: boolean
   clickable?: boolean
+  onClick?: () => void
 }) => {
   return (
     <div
@@ -33,9 +35,15 @@ export const ClothingItem = ({
       onClick={() => {
         if (link === undefined) return
         window.open(link, "_blank")
+        onClick()
       }}>
       <div className="flex gap-8">
-        <img src={imageSrc} width={"100"} className="rounded-md mt-4 max-h-48" alt={name} />
+        <img
+          src={imageSrc}
+          width={"100"}
+          className="rounded-md mt-4 max-h-48"
+          alt={name}
+        />
 
         <div className="flex flex-col gap-6">
           <div>
