@@ -2,6 +2,7 @@ import {
   CartModalMessage,
   OPEN_CART_MODAL
 } from "@/background/ports/openCartModal"
+import { OPEN_DID_IT_HELP_MODAL } from "@/background/ports/openDidItHelpModal"
 import { OPEN_PROMO_MODAL } from "@/background/ports/openPromoModal"
 import { EqualCard } from "@components/cartModal/equalCard"
 import { HeaderCountCard } from "@components/cartModal/headerCountCard"
@@ -33,24 +34,48 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
   document.querySelector("body")
 
 const CartSummaryModal = () => {
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = React.useState<boolean>(undefined)
   const openCartModalPort = usePort(OPEN_CART_MODAL)
   const { data: alternatives, isLoading, isError } = useGetAllAlternatives()
   const [cartNum, setCartNum] = React.useState(0)
   const openPromoModalPort = usePort(OPEN_PROMO_MODAL)
+  const openDidItHelpModalPort = usePort(OPEN_DID_IT_HELP_MODAL)
 
   React.useEffect(() => {
     openCartModalPort.listen(async (msg: CartModalMessage | undefined) => {
       setShow(true)
     })
 
-    setInterval(() => {
-      const anchorElement = document.querySelector(".cart-num") as HTMLElement
-      if (anchorElement) {
-        setCartNum(Number(anchorElement.textContent))
-      }
-    }, 2000)
+    if (window.location.href === "https://sg.shein.com/cart") {
+      setInterval(() => {
+        const anchorElements = document.querySelectorAll(
+          ".j-cart-item"
+        ) as NodeListOf<Element>
+        if (anchorElements.length > 0) {
+          setCartNum(anchorElements.length)
+        }
+      }, 1000)
+    } else {
+      setInterval(() => {
+        const anchorElement = document.querySelector(".cart-num") as HTMLElement
+        if (anchorElement) {
+          setCartNum(Number(anchorElement.textContent))
+        }
+      }, 2000)
+    }
   }, [])
+
+  React.useEffect(() => {
+    if (
+      show === false &&
+      window.location.href === "https://sg.shein.com/cart"
+    ) {
+      setTimeout(() => {
+        console.log("openDidItHelpModalPort")
+        openDidItHelpModalPort.send({})
+      }, 7000)
+    }
+  }, [show])
 
   if (isLoading) {
     return <Spinner />

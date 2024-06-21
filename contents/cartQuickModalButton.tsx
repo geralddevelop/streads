@@ -9,8 +9,7 @@ import { useEffect, useState } from "react"
 import { usePort } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://sg.shein.com/*"],
-  exclude_matches: ["https://sg.shein.com/cart"],
+  matches: ["https://sg.shein.com/cart"],
   css: ["font.css"]
 }
 
@@ -20,19 +19,27 @@ export const getStyle = () => {
   return style
 }
 
-const QuickModalButton = () => {
+const CartQuickModalButton = () => {
   const openCartModalPort = usePort(OPEN_CART_MODAL)
   const [cartNum, setCartNum] = useState(0)
-  async function handleClick() {
+
+  function handleClick() {
     openCartModalPort.send(undefined)
   }
 
   useEffect(() => {
     setInterval(() => {
-      const anchorElement = document.querySelector(".cart-num") as HTMLElement
-      if (anchorElement) {
-        setCartNum(Number(anchorElement.textContent))
+      const anchorElements = document.querySelectorAll(
+        ".j-cart-item"
+      ) as NodeListOf<Element>
+      if (anchorElements.length > 0) {
+        setCartNum(anchorElements.length)
       }
+    }, 1000)
+
+    setTimeout(() => {
+      console.log("open")
+      handleClick()
     }, 1000)
   }, [])
 
@@ -109,4 +116,4 @@ const QuickModalButton = () => {
   )
 }
 
-export default QuickModalButton
+export default CartQuickModalButton
