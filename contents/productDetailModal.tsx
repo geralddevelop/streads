@@ -135,14 +135,12 @@ const ProductDetailModal = () => {
               </>
             )}
 
-            <div className="hidden sm:block">
-              <div className="flex justify-center">
-                <Tabs
-                  tabs={["Alternatives", "Impact"]}
-                  indexSelected={tabIndex}
-                  onTabClick={(index) => setTabIndex(index)}
-                />
-              </div>
+            <div className="flex justify-center">
+              <Tabs
+                tabs={["Alternatives", "Impact"]}
+                indexSelected={tabIndex}
+                onTabClick={(index) => setTabIndex(index)}
+              />
             </div>
             <div className="pt-8">
               {tabIndex === 0 ? (

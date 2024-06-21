@@ -35,13 +35,7 @@ export const ClothingItem = ({
         window.open(link, "_blank")
       }}>
       <div className="flex gap-8">
-        <img
-          src={imageSrc}
-          height={"300"}
-          width={"100"}
-          className="rounded-md"
-          alt={name}
-        />
+        <img src={imageSrc} width={"100"} className="rounded-md mt-4" alt={name} />
 
         <div className="flex flex-col gap-6">
           <div>

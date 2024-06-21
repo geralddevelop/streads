@@ -1,20 +1,19 @@
 // This file show the grading image of the product catalog page in shein.com.
 import { ProductDetailModalMessage } from "@/background/ports/openProductDetailModal"
-import { getRandomWeighted } from "@utils/functions"
+import { getRandomInt, getRandomWeighted } from "@utils/functions"
 import grade1 from "data-base64:~_assets/grading/1.png"
 import grade2 from "data-base64:~_assets/grading/2.png"
 import grade3 from "data-base64:~_assets/grading/3.png"
 import grade4 from "data-base64:~_assets/grading/4.png"
 import grade5 from "data-base64:~_assets/grading/5.png"
 import cssText from "data-text:~_styles/style.css"
-import type { PlasmoCSConfig, PlasmoGetInlineAnchorList } from "plasmo"
+import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useState } from "react"
 
 import { usePort } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://sg.shein.com/*"]
-  // exclude_matches: ["https://sg.shein.com*/html*/"]
+  matches: ["https://sg.shein.com/*html*"]
 }
 
 export const getStyle = () => {
@@ -23,29 +22,25 @@ export const getStyle = () => {
   return style
 }
 
-let count = 12
+const findBackgroundImages = (anchor: HTMLElement): string[] => {
+  const images: string[] = []
+  const elements = anchor.querySelectorAll("[data-background-image]")
 
-export const getInlineAnchorList: PlasmoGetInlineAnchorList = () =>
-  document.querySelectorAll("div.crop-image-container>div")
-// document.querySelectorAll("section.product-card")
+  elements.forEach((element) => {
+    const backgroundImage = element.getAttribute("data-background-image")
+    if (backgroundImage) {
+      images.push(backgroundImage)
+    }
+  })
 
-const ProductCatalogGrading = ({ anchor }) => {
-  // ! THIS IS A BUG, NEED TO GET ONLY THE FIRST ITEM.
-  if (
-    anchor.element.offsetParent.getAttribute("style") !==
-      "padding-bottom:calc(1.33 * 100%);" &&
-    count > 0
-  ) {
-    count = count - 1
-    return null
-  }
+  return images
+}
 
-  if (
-    anchor.element.offsetParent.offsetParent.offsetParent.offsetParent
-      .children[1].children === undefined
-  ) {
-    return <></>
-  }
+export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
+  document.querySelector("div.product-intro__main")
+
+const ProductDetailGrading = ({ anchor }) => {
+  console.log("ProductDetailGrading")
 
   const openProductDetailModalPort = usePort("openProductDetailModal")
   const [grading] = useState(
@@ -58,31 +53,27 @@ const ProductCatalogGrading = ({ anchor }) => {
     ])
   )
 
+  const anchorElement = document.querySelector(
+    ".product-intro__main"
+  ) as HTMLElement
+
   const children =
-    anchor.element.offsetParent.offsetParent.offsetParent.offsetParent
-      .children[1].children
+    anchor.element.offsetParent.offsetParent.offsetParent.children[1]
+      .children[0].children
   const productKeywords = []
   for (let i = 0; i < children.length; i++) {
     productKeywords.push(...children[i].innerText.toLowerCase().split(" "))
   }
 
-  // This is a bug, image hidden behind image.
-  const imageSrc =
-    anchor.element.offsetParent.children[0].tagName === "SPAN"
-      ? anchor.element.offsetParent.children[0].children[0].getAttribute("src")
-      : anchor.element.offsetParent.children[0].tagName === "IMG"
-        ? anchor.element.offsetParent.children[0].getAttribute("src")
-        : ""
-
   async function handleGradingClick() {
     console.log("sending command")
-    console.log(imageSrc)
+
     // Should open grading modal in productDetailModal
     openProductDetailModalPort.send({
       productId: "world from grading",
       keywords: productKeywords,
-      productName: children[0].innerText ?? "Item",
-      productImageSrc: imageSrc,
+      productName: children[0].innerText.split("\n")[0] ?? "Item",
+      productImageSrc: findBackgroundImages(anchorElement)[0],
       productGrading: grading,
       productBrand: "SHEIN"
     } as ProductDetailModalMessage)
@@ -132,4 +123,4 @@ const ProductCatalogGrading = ({ anchor }) => {
   )
 }
 
-export default ProductCatalogGrading
+export default ProductDetailGrading
