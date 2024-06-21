@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   font-family: "Montserrat";
 }
 
@@ -14,6 +14,7 @@
 
 #plasmo-shadow-container {
   right: 0;
-  top: 10%;
+  top: 13%;
   position: fixed !important;
+  z-index: 80 !important;
 }

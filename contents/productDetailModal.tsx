@@ -14,7 +14,7 @@ import { withQueryClient } from "@libs/react-query/react-query"
 import { classNames } from "@utils/constants"
 import modalBanner from "data-base64:~_assets/banners/modal-banner.png"
 import logo from "data-base64:~_assets/logo-colored.svg"
-import cssText from "data-text:~_styles/style.css"
+import cssText from "data-text:~_styles/modal.css"
 import { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React from "react"
 

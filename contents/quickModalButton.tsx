@@ -3,6 +3,7 @@ import { OPEN_CART_MODAL } from "@/background/ports/openCartModal"
 import dragIcon from "data-base64:~_assets/icons/drag.svg"
 import cssText from "data-text:~_styles/quickModalButton.css"
 import type { PlasmoCSConfig } from "plasmo"
+import { useEffect, useState } from "react"
 
 import { usePort } from "@plasmohq/messaging/hook"
 
@@ -19,10 +20,19 @@ export const getStyle = () => {
 
 const QuickModalButton = () => {
   const openProductDetailModalPort = usePort(OPEN_CART_MODAL)
-
+  const [cartNum, setCartNum] = useState(0)
   async function handleClick() {
     openProductDetailModalPort.send(undefined)
   }
+
+  useEffect(() => {
+    setInterval(() => {
+      const anchorElement = document.querySelector(".cart-num") as HTMLElement
+      if (anchorElement) {
+        setCartNum(Number(anchorElement.textContent))
+      }
+    }, 2000)
+  }, [])
 
   return (
     <div className="absolute top-0 right-0 flex flex-col items-end">
@@ -66,7 +76,7 @@ const QuickModalButton = () => {
         </div>
       </div>
       <button
-        className="w-[170px] bg-brand-green rounded-tl-md rounded-bl-md flex justify-between gap-4 items-center px-4 py-4 z-50 hover:brightness-90 cursor-pointer"
+        className="w-[170px] bg-brand-red rounded-tl-md rounded-bl-md flex justify-between gap-4 items-center px-4 py-4 z-50 hover:brightness-90 cursor-pointer"
         onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
@@ -74,7 +84,10 @@ const QuickModalButton = () => {
 
           handleClick()
         }}>
-        <p className="font-bold text-sm text-white">we're streads</p>
+        <div className="flex flex-col text-left">
+          <p className="font-bold text-sm text-white">we're streads</p>
+          <p className="text-xs text-white">{cartNum} in Cart</p>
+        </div>
         <img src={dragIcon} alt="drag icon" />
       </button>
     </div>

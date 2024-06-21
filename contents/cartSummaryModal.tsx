@@ -11,7 +11,7 @@ import { useGetAllAlternatives } from "@hooks/alternatives"
 import { withQueryClient } from "@libs/react-query/react-query"
 import { classNames } from "@utils/constants"
 import cartModalBanner from "data-base64:~_assets/banners/cart-modal-banner.png"
-import cssText from "data-text:~_styles/style.css"
+import cssText from "data-text:~_styles/modal.css"
 import { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import React from "react"
 
