@@ -11,6 +11,7 @@ import { Tabs } from "@components/tabs"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import { useGetAllAlternatives } from "@hooks/alternatives"
 import { withQueryClient } from "@libs/react-query/react-query"
+import { classNames } from "@utils/constants"
 import modalBanner from "data-base64:~_assets/banners/modal-banner.png"
 import logo from "data-base64:~_assets/logo-colored.svg"
 import cssText from "data-text:~_styles/style.css"
@@ -62,160 +63,156 @@ const ProductDetailModal = () => {
     )
   }, [])
 
-  if (show) {
-    if (isLoading) {
-      return <Spinner />
-    }
+  if (isLoading) {
+    return <Spinner />
+  }
 
-    if (isError || alternatives === undefined || alternatives.length === 0) {
-      return <></>
-    }
+  if (isError || alternatives === undefined || alternatives.length === 0) {
+    return <></>
+  }
 
-    return (
+  return (
+    <div
+      className={classNames(
+        show ? "translate-x-0" : "translate-x-full",
+        "modal-overlay z-50 h-screen transition-transform transform duration-500"
+      )}
+      onClick={() => {
+        setShow(false)
+      }}>
       <div
-        className="modal-overlay z-50 h-screen"
-        onClick={() => {
-          setShow(false)
+        className="modal-content z-50 max-h-screen overflow-y-auto shadow-xl rounded-tl-xl rounded-tr-xl"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
         }}>
-        <div
-          className="modal-content z-50 max-h-screen overflow-y-auto shadow-xl rounded-tl-xl rounded-tr-xl"
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-          }}>
-          <div className="flex justify-between items-center p-8 pb-0">
-            <button
-              className="text-md"
-              onClick={() =>
-                window.open(
-                  "https://streads-landing-sljp.vercel.app/",
-                  "_blank"
-                )
-              }>
-              <img src={logo} alt="Streads Logo" />
-            </button>
+        <div className="flex justify-between items-center p-8 pb-0">
+          <button
+            className="text-md"
+            onClick={() =>
+              window.open("https://streads-landing-sljp.vercel.app/", "_blank")
+            }>
+            <img src={logo} alt="Streads Logo" />
+          </button>
 
-            <button
-              type="button"
-              className="rounded-full p-2 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-              onClick={() => setShow(false)}>
-              <XMarkIcon className="h-8 w-8" aria-hidden="true" />
-            </button>
+          <button
+            type="button"
+            className="rounded-full p-2 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+            onClick={() => setShow(false)}>
+            <XMarkIcon className="h-8 w-8" aria-hidden="true" />
+          </button>
+        </div>
+
+        <img
+          src={modalBanner}
+          alt="Modal Banner"
+          width={"500px"}
+          className="pt-4"
+        />
+
+        <div className="p-8 pt-4">
+          {product && (
+            <>
+              <p
+                onClick={() =>
+                  window.open(
+                    "https://streads-landing-sljp.vercel.app/",
+                    "_blank"
+                  )
+                }
+                className="underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
+                Find out more about the grading
+              </p>
+              <div className="p-6 pt-4 pb-0">
+                <ClothingItem
+                  clickable={false}
+                  name={product.productName}
+                  brand={product.productBrand}
+                  imageSrc={product.productImageSrc}
+                  sustainableScoring={product.productGrading}
+                  labels={["No sustainable fabric", "Low worker Welfare"]}
+                />
+              </div>
+            </>
+          )}
+
+          <div className="flex justify-center">
+            <Tabs
+              tabs={["Alternatives", "Impact"]}
+              indexSelected={tabIndex}
+              onTabClick={(index) => setTabIndex(index)}
+            />
           </div>
-
-          <img
-            src={modalBanner}
-            alt="Modal Banner"
-            width={"500px"}
-            className="pt-4"
-          />
-
-          <div className="p-8 pt-4">
-            {product && (
-              <>
-                <p
-                  onClick={() =>
-                    window.open(
-                      "https://streads-landing-sljp.vercel.app/",
-                      "_blank"
-                    )
-                  }
-                  className="underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
-                  Find out more about the grading
-                </p>
-                <div className="p-6 pt-4 pb-0">
-                  <ClothingItem
-                    clickable={false}
-                    name={product.productName}
-                    brand={product.productBrand}
-                    imageSrc={product.productImageSrc}
-                    sustainableScoring={product.productGrading}
-                    labels={["No sustainable fabric", "Low worker Welfare"]}
-                  />
-                </div>
-              </>
-            )}
-
-            <div className="flex justify-center">
-              <Tabs
-                tabs={["Alternatives", "Impact"]}
-                indexSelected={tabIndex}
-                onTabClick={(index) => setTabIndex(index)}
-              />
-            </div>
-            <div className="pt-8">
-              {tabIndex === 0 ? (
-                <div className="flex flex-col gap-4 text-left">
-                  <div className="flex items-center gap-2">
-                    <HighlightedNumberText
-                      num={
-                        alternatives.filter((alternative) => {
-                          const keywords = alternative.keywords.map((keyword) =>
-                            keyword.toLowerCase()
-                          )
-
-                          if (alternativeKeywords.length === 0) return true
-                          return alternativeKeywords.some((keyword) =>
-                            keywords.includes(keyword)
-                          )
-                        }).length
-                      }
-                    />
-
-                    <p className="text-sm">sustainable alternatives found</p>
-                  </div>
-
-                  <div className="flex flex-col">
-                    {alternatives
-                      .filter((alternative) => {
+          <div className="pt-8">
+            {tabIndex === 0 ? (
+              <div className="flex flex-col gap-4 text-left">
+                <div className="flex items-center gap-2">
+                  <HighlightedNumberText
+                    num={
+                      alternatives.filter((alternative) => {
                         const keywords = alternative.keywords.map((keyword) =>
                           keyword.toLowerCase()
                         )
+
                         if (alternativeKeywords.length === 0) return true
                         return alternativeKeywords.some((keyword) =>
                           keywords.includes(keyword)
                         )
-                      })
-                      .map((alternative, i) => (
-                        <ClothingItem
-                          key={alternative.name}
-                          name={alternative.name}
-                          imageSrc={alternative.image_src}
-                          brand={alternative.brand}
-                          labels={["Sustainable fabric", "Worker Welfare"]}
-                          link={alternative.src}
-                          price={alternative.price}
-                          haveDividerBelow={i !== alternatives.length - 1}
-                        />
-                      ))}
-                  </div>
+                      }).length
+                    }
+                  />
+
+                  <p className="text-sm">sustainable alternatives found</p>
                 </div>
-              ) : (
-                <div className="flex flex-col gap-4 text-left">
-                  <div className="px-4">
-                    <ImpactInfoCard grading={product.productGrading} />
-                  </div>
-                  <ImpactItem
-                    title="Eco Impact"
-                    description="Choosing sustainable options helps protect natural resources and reduce pollution"
-                  />
-                  <ImpactItem
-                    title="Health Impact"
-                    description="Eco-friendly products support better health by cutting down on harmful pollution."
-                  />
-                  <ImpactItem
-                    title="Social Impact"
-                    description="Supporting ethical brands ensures fair labor practices and better worker welfare."
-                  />
+
+                <div className="flex flex-col">
+                  {alternatives
+                    .filter((alternative) => {
+                      const keywords = alternative.keywords.map((keyword) =>
+                        keyword.toLowerCase()
+                      )
+                      if (alternativeKeywords.length === 0) return true
+                      return alternativeKeywords.some((keyword) =>
+                        keywords.includes(keyword)
+                      )
+                    })
+                    .map((alternative, i) => (
+                      <ClothingItem
+                        key={alternative.name}
+                        name={alternative.name}
+                        imageSrc={alternative.image_src}
+                        brand={alternative.brand}
+                        labels={["Sustainable fabric", "Worker Welfare"]}
+                        link={alternative.src}
+                        price={alternative.price}
+                        haveDividerBelow={i !== alternatives.length - 1}
+                      />
+                    ))}
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 text-left">
+                <div className="px-4">
+                  <ImpactInfoCard grading={product.productGrading} />
+                </div>
+                <ImpactItem
+                  title="Eco Impact"
+                  description="Choosing sustainable options helps protect natural resources and reduce pollution"
+                />
+                <ImpactItem
+                  title="Health Impact"
+                  description="Eco-friendly products support better health by cutting down on harmful pollution."
+                />
+                <ImpactItem
+                  title="Social Impact"
+                  description="Supporting ethical brands ensures fair labor practices and better worker welfare."
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
-    )
-  } else {
-    return <></>
-  }
+    </div>
+  )
 }
 export default withQueryClient(ProductDetailModal)
