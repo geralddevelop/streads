@@ -16,7 +16,9 @@ import { useState } from "react"
 import { usePort } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://sg.shein.com/*"]
+  matches: ["https://sg.shein.com/*"],
+  css: ["font.css"]
+
   // exclude_matches: ["https://sg.shein.com*/html*/"]
 }
 

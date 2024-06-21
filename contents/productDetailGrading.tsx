@@ -17,7 +17,8 @@ import { useState } from "react"
 import { usePort } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://sg.shein.com/*html*"]
+  matches: ["https://sg.shein.com/*html*"],
+  css: ["font.css"]
 }
 
 export const getStyle = () => {

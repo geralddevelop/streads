@@ -14,9 +14,9 @@ module.exports = {
       xl: ["24px", "32px"]
     },
     extend: {
-      fontFamily: {
-        sans: ['Montserrat', 'sans-serif'],
-      },
+      // fontFamily: {
+      //   sans: ['Montserrat', 'sans-serif'],
+      // },
       colors: {
         "brand-red": "#D34C3E",
         "brand-light-red": "#FFCCC7",

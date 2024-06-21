@@ -7,7 +7,8 @@ import type { PlasmoCSConfig } from "plasmo"
 import { usePort } from "@plasmohq/messaging/hook"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://sg.shein.com/*"]
+  matches: ["https://sg.shein.com/*"],
+  css: ["font.css"]
 }
 
 export const getStyle = () => {

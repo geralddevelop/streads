@@ -8,7 +8,8 @@ import cssText from "data-text:~_styles/style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchorList } from "plasmo"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://sg.shein.com/*html*"]
+  matches: ["https://sg.shein.com/*html*"],
+  css: ["font.css"]
 }
 
 export const getStyle = () => {
