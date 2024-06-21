@@ -33,8 +33,6 @@ export const ClothingItem = ({
         "rounded-md text-left"
       )}
       onClick={() => {
-        if (link === undefined) return
-        window.open(link, "_blank")
         onClick()
       }}>
       <div className="flex gap-8">

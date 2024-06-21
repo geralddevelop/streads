@@ -191,7 +191,8 @@ const ProductDetailModal = () => {
                         onClick={() => {
                           setShow(false)
                           openPromoModalPort.send({
-                            brand: alternative.brand
+                            brand: alternative.brand,
+                            src: alternative.src
                           })
                         }}
                       />

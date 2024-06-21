@@ -2,6 +2,7 @@ import {
   CartModalMessage,
   OPEN_CART_MODAL
 } from "@/background/ports/openCartModal"
+import { OPEN_PROMO_MODAL } from "@/background/ports/openPromoModal"
 import { EqualCard } from "@components/cartModal/equalCard"
 import { HeaderCountCard } from "@components/cartModal/headerCountCard"
 import { ClothingItem } from "@components/detailModal/clothingItem"
@@ -36,6 +37,7 @@ const CartSummaryModal = () => {
   const openCartModalPort = usePort(OPEN_CART_MODAL)
   const { data: alternatives, isLoading, isError } = useGetAllAlternatives()
   const [cartNum, setCartNum] = React.useState(0)
+  const openPromoModalPort = usePort(OPEN_PROMO_MODAL)
 
   React.useEffect(() => {
     openCartModalPort.listen(async (msg: CartModalMessage | undefined) => {
@@ -129,6 +131,13 @@ const CartSummaryModal = () => {
                   link={alternative.src}
                   price={alternative.price}
                   haveDividerBelow={i !== alternatives.length - 1}
+                  onClick={() => {
+                    setShow(false)
+                    openPromoModalPort.send({
+                      brand: alternative.brand,
+                      src: alternative.src
+                    })
+                  }}
                 />
               ))}
             </div>

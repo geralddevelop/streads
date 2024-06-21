@@ -1,3 +1,4 @@
+import { count } from "console"
 import { OPEN_PROMO_MODAL } from "@/background/ports/openPromoModal"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import { withQueryClient } from "@libs/react-query/react-query"
@@ -29,19 +30,42 @@ const PromoModal = () => {
   const openPromoModalPort = usePort(OPEN_PROMO_MODAL)
   const [promoCode, setPromoCode] = React.useState("#streadsloveyou")
   const [brand, setBrand] = React.useState("")
+  const [countdown, setCountdown] = React.useState(0)
+  const [src, setSrc] = React.useState(undefined)
+  const [tmpSrc, setTmpSrc] = React.useState(undefined)
 
   React.useEffect(() => {
     openPromoModalPort.listen(async (msg) => {
       setPromoCode(`#streadslove${msg.brand}`)
       setBrand(msg.brand)
+      setSrc(msg.src)
       setShow(true)
+      setCountdown(5)
     })
   }, [])
+
+  React.useEffect(() => {
+    console.log("countdown: ", countdown)
+    if (src === undefined) {
+      return
+    }
+
+    if (countdown === 0) {
+      window.open(src, "_blank")
+      setTmpSrc(src)
+      setSrc(undefined)
+    } else {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [countdown])
 
   return (
     <div
       className={classNames(
-        show ? "translate-y-0" : "-translate-y-full",
+        show ? "translate-x-0" : "translate-x-full",
         "modal-overlay z-50 h-screen transition-transform transform duration-500"
       )}
       onClick={() => {
@@ -79,6 +103,24 @@ const PromoModal = () => {
           <p className="text-sm font-normal">Snag your discount</p>
           <p className="text-md font-extrabold">{promoCode}</p>
         </div>
+        {countdown === 0 ? (
+          <p className="text-sm text-gray-500 mt-1">Hope this was helpful!</p>
+        ) : (
+          <p className="text-sm text-gray-500 mt-1">
+            Redirecting in {countdown} seconds
+          </p>
+        )}
+        <p
+          onClick={() => {
+            if (countdown === 0) {
+              window.open(tmpSrc, "_blank")
+            } else {
+              setCountdown(0)
+            }
+          }}
+          className="text-sm underline text-blue-600 hover:text-blue-800 cursor-pointer mt-1">
+          Click here to get redirected now
+        </p>
       </div>
     </div>
   )
