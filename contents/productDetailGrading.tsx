@@ -1,6 +1,10 @@
 // This file show the grading image of the product catalog page in shein.com.
-import { ProductDetailModalMessage } from "@/background/ports/openProductDetailModal"
-import { getRandomInt, getRandomWeighted } from "@utils/functions"
+
+import {
+  OPEN_PRODUCT_DETAIL_MODAL,
+  ProductDetailModalMessage
+} from "@/background/ports/openProductDetailModal"
+import { getRandomWeighted } from "@utils/functions"
 import grade1 from "data-base64:~_assets/grading/1.png"
 import grade2 from "data-base64:~_assets/grading/2.png"
 import grade3 from "data-base64:~_assets/grading/3.png"
@@ -42,7 +46,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = () =>
 const ProductDetailGrading = ({ anchor }) => {
   console.log("ProductDetailGrading")
 
-  const openProductDetailModalPort = usePort("openProductDetailModal")
+  const openProductDetailModalPort = usePort(OPEN_PRODUCT_DETAIL_MODAL)
   const [grading] = useState(
     getRandomWeighted([
       { value: 1, weight: 5 },

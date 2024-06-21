@@ -1,4 +1,5 @@
 // This file show the button to quick access modal on the right.
+import { OPEN_CART_MODAL } from "@/background/ports/openCartModal"
 import dragIcon from "data-base64:~_assets/icons/drag.svg"
 import cssText from "data-text:~_styles/quickModalButton.css"
 import type { PlasmoCSConfig } from "plasmo"
@@ -16,7 +17,7 @@ export const getStyle = () => {
 }
 
 const QuickModalButton = () => {
-  const openProductDetailModalPort = usePort("openProductDetailModal")
+  const openProductDetailModalPort = usePort(OPEN_CART_MODAL)
 
   async function handleClick() {
     openProductDetailModalPort.send(undefined)
@@ -53,7 +54,10 @@ const QuickModalButton = () => {
 
           <p
             onClick={() =>
-              window.open("https://fashionchecker.org/brand-profile.html?q=7452173", "_blank")
+              window.open(
+                "https://fashionchecker.org/brand-profile.html?q=7452173",
+                "_blank"
+              )
             }
             className="text-[8px] underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
             Find out more about insights

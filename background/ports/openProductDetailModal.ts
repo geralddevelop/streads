@@ -10,8 +10,12 @@ export type ProductDetailModalMessage = {
   productBrand: string
 }
 
-const handler: PlasmoMessaging.PortHandler = async (req, res) => {
+const ProductDetailModalHandler: PlasmoMessaging.PortHandler = async (
+  req,
+  res
+) => {
+  console.log("openProductDetailModal")
   res.send(req.body)
 }
 
-export default handler
+export default ProductDetailModalHandler

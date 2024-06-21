@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply font-sans;
+  }
+}
+
 #plasmo-shadow-container {
-    right: 0;
-    top: 10%;
-    position: fixed !important;
+  right: 0;
+  top: 10%;
+  position: fixed !important;
 }
