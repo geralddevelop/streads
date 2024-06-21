@@ -34,11 +34,19 @@ const CartSummaryModal = () => {
   const [show, setShow] = React.useState(false)
   const openCartModalPort = usePort(OPEN_CART_MODAL)
   const { data: alternatives, isLoading, isError } = useGetAllAlternatives()
+  const [cartNum, setCartNum] = React.useState(0)
 
   React.useEffect(() => {
     openCartModalPort.listen(async (msg: CartModalMessage | undefined) => {
       setShow(true)
     })
+
+    setInterval(() => {
+      const anchorElement = document.querySelector(".cart-num") as HTMLElement
+      if (anchorElement) {
+        setCartNum(Number(anchorElement.textContent))
+      }
+    }, 2000)
   }, [])
 
   if (show) {
@@ -62,7 +70,19 @@ const CartSummaryModal = () => {
             e.preventDefault()
             e.stopPropagation()
           }}>
-          <HeaderCountCard grading={1} itemCount={5}>
+          <HeaderCountCard
+            grading={
+              cartNum > 5
+                ? 1
+                : cartNum > 4
+                  ? 2
+                  : cartNum > 3
+                    ? 3
+                    : cartNum > 2
+                      ? 4
+                      : 5
+            }
+            itemCount={cartNum}>
             <button
               type="button"
               className="m-8 rounded-full p-2 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
@@ -72,7 +92,21 @@ const CartSummaryModal = () => {
           </HeaderCountCard>
 
           <div className="m-8 mx-16">
-            <EqualCard co2Kg={240} plasticBags={1200} />
+            <EqualCard
+              grading={
+                cartNum > 5
+                  ? 1
+                  : cartNum > 4
+                    ? 2
+                    : cartNum > 3
+                      ? 3
+                      : cartNum > 2
+                        ? 4
+                        : 5
+              }
+              co2Kg={cartNum * 7}
+              plasticBags={cartNum * 35}
+            />
           </div>
 
           <div className="p-8 pt-0">

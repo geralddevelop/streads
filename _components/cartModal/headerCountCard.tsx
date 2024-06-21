@@ -66,7 +66,7 @@ export const HeaderCountCard = ({
                     : grading === 5
                       ? "text-brand-green"
                       : "text-gray-800",
-            "text-brand-orange font-bold text-lg text-left whitespace-pre-line"
+            "font-bold text-lg text-left whitespace-pre-line"
           )}>
           {grading === 1
             ? "Your cart is \nnot looking good"
