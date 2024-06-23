@@ -44,8 +44,8 @@
 
 
 .modal-content-small {
-    width: 330px;
-    height: 40%;
+    width: 350px;
+    /* height: 55%; */
     background-color: white;
     /* padding: 20px; */
     text-align: center;

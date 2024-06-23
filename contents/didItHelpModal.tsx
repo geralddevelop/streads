@@ -73,27 +73,33 @@ const DidItHelpModal = () => {
             <XMarkIcon className="h-8 w-8" aria-hidden="true" />
           </button>
         </div>
+        <div className="px-4">
+          {state === "unselected" ? (
+            <UnselectedView
+              onNo={() => {
+                setState("no")
+              }}
+              onYes={() => {
+                setState("yes")
+              }}
+            />
+          ) : state === "yes" ? (
+            <YesView
+              onShare={() => {
+                window.open(
+                  "https://streads-landing-sljp.vercel.app/",
+                  "_blank"
+                )
+              }}
+            />
+          ) : (
+            <NoView />
+          )}
+        </div>
 
-        {state === "unselected" ? (
-          <UnselectedView
-            onNo={() => {
-              setState("no")
-            }}
-            onYes={() => {
-              setState("yes")
-            }}
-          />
-        ) : state === "yes" ? (
-          <YesView
-            onShare={() => {
-              window.open("https://streads-landing-sljp.vercel.app/", "_blank")
-            }}
-          />
-        ) : (
-          <NoView />
-        )}
-
-        <p className="my-4 text-right text-sm font-semibold">#streads💚you</p>
+        <p className="my-4 text-right text-sm font-semibold px-4">
+          #streads💚you
+        </p>
       </div>
     </div>
   )
@@ -160,7 +166,7 @@ const YesView = ({ onShare }: { onShare: () => void }) => {
 
       <div className="flex justify-center gap-4">
         <button
-          className="w-[150px] flex justify-center items-center text-center rounded-md p-4 hover:brightness-90 cursor-pointer border-2 border-brand-green"
+          className="w-[150px] flex justify-center items-center text-center rounded-md p-4 hover:brightness-90 cursor-pointer bg-brand-green"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -168,7 +174,7 @@ const YesView = ({ onShare }: { onShare: () => void }) => {
 
             onShare()
           }}>
-          <p className="font-bold text-sm text-brand-green">Share your wins!</p>
+          <p className="font-bold text-sm text-white">Share your wins!</p>
         </button>
       </div>
     </>
@@ -185,7 +191,7 @@ const NoView = () => {
         <img src={noIcon} width={109} height={109} />
       </div>
 
-      <div className="round-md bg-gray-100">
+      <div className="round-md bg-gray-100 rounded-bl-md rounded-br-md">
         <div className="bg-brand-green p-4 rounded-tl-md rounded-tr-md">
           <p className="text-white font-semibold text-sm">
             💚Streads community achievement💚

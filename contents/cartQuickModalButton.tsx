@@ -45,9 +45,9 @@ const CartQuickModalButton = () => {
 
   return (
     <div className="absolute top-0 right-0 flex flex-col items-end">
-      <div className="bg-gray-100 rounded-tl-md rounded-bl-md w-[300px]">
+      <div className="bg-gray-100 rounded-tl-md rounded-bl-md w-[320px]">
         <div className="text-white bg-brand-green py-2 px-4 rounded-tl-md text-center">
-          <p className="font-semibold text-[10px]">
+          <p className="font-semibold text-[12px]">
             Brand Social Image Insights: SHEIN
           </p>
         </div>
@@ -56,18 +56,18 @@ const CartQuickModalButton = () => {
           <div className="grid grid-cols-3 text-center gap-8">
             <div className="flex flex-col gap-1">
               <p className="text-[24px] font-semibold text-brand-green">7%</p>
-              <p className="font-medium text-[8px]">Transparency Score</p>
+              <p className="font-medium text-[12px]">Transparency Score</p>
             </div>
 
             <div className="flex flex-col gap-1">
               <p className="text-[24px] font-semibold text-brand-green">E</p>
-              <p className="font-medium text-[8px]">Living wage paid score</p>
+              <p className="font-medium text-[12px]">Living wage paid score</p>
             </div>
 
             <div className="flex flex-col gap-1">
               <p className="text-[24px] font-semibold text-brand-green">1/5</p>
-              <p className="font-medium text-[8px]">
-                supply chain transparency score
+              <p className="font-medium text-[12px]">
+                Supply chain transparency score
               </p>
             </div>
           </div>
@@ -79,7 +79,7 @@ const CartQuickModalButton = () => {
                 "_blank"
               )
             }
-            className="text-[8px] underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
+            className="text-[12px] underline text-blue-600 hover:text-blue-800 text-right cursor-pointer">
             Find out more about insights
           </p>
         </div>

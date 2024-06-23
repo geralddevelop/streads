@@ -73,7 +73,7 @@ const CartSummaryModal = () => {
       setTimeout(() => {
         console.log("openDidItHelpModalPort")
         openDidItHelpModalPort.send({})
-      }, 7000)
+      }, 4000)
     }
   }, [show])
 
